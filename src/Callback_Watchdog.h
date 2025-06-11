@@ -42,8 +42,8 @@ class Callback_Watchdog : public Callback<void> {
 #else
       , m_oneshot_timer()
 #endif // THINGSBOARD_USE_ESP_TIMER
-    {
-        // Nothing to do
+    {        
+        create_timer();
     }
 
 #if THINGSBOARD_USE_ESP_TIMER
