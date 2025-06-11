@@ -222,6 +222,11 @@ class Attribute_Request : public IAPI_Implementation {
             size += strlen(",");
         }
 
+        // Add space for null termination at the end of the char array, has to be done,
+        // because we later cast it to const char *, meaning the original size information is lost
+        // and is instead handled by null termination at the end of the string
+        size += 1;
+
         // Initalizes complete array to 0, required because strncat needs both destination and source to contain proper null terminated strings
         char request[size] = {};
         for (const auto & att : attributes) {
@@ -237,6 +242,8 @@ class Attribute_Request : public IAPI_Implementation {
             strncat(request, ",", size);
             size -= strlen(",");
         }
+
+        request[size - 1] = '\0'; // Ensure null termination
 
         // Ensure to cast to const, this is done so that ArduinoJson does not copy the value but instead simply store the pointer, which does not require any more memory,
         // besides the base size needed to allocate one key-value pair. Because if we don't the char array would be copied
